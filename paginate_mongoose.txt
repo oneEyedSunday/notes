@@ -1,0 +1,62 @@
+From Stack Overflow
+
+MyModel.find( { createdOn: { $lte: request.createdOnBefore } } )
+.limit( 10 )
+.sort( '-createdOn' )
+
+MyModel.find(query, fields, { skip: 10, limit: 5 }, function(err, results) { ... });
+
+var perPage = 10
+  , page = Math.max(0, req.param('page'))
+
+Event.find()
+    .select('name')
+    .limit(perPage)
+    .skip(perPage * page)
+    .sort({
+        name: 'asc'
+    })
+    .exec(function(err, events) {
+        Event.count().exec(function(err, count) {
+            res.render('events', {
+                events: events,
+                page: page,
+                pages: count / perPage
+            })
+        })
+    })
+
+var pageOptions = {
+    page: req.query.page || 0,
+    limit: req.query.limit || 10
+}
+
+sexyModel.find()
+    .skip(pageOptions.page*pageOptions.limit)
+    .limit(pageOptions.limit)
+    .exec(function (err, doc) {
+        if(err) { res.status(500).json(err); return; };
+        res.status(200).json(doc);
+    })
+
+var _pageNumber = 2,
+  _pageSize = 50;
+
+Student.count({},function(err,count){
+  Student.find({}, null, {
+    sort: {
+      Name: 1
+    }
+  }).skip(_pageNumber > 0 ? ((_pageNumber - 1) * _pageSize) : 0).limit(_pageSize).exec(function(err, docs) {
+    if (err)
+      res.json(err);
+    else
+      res.json({
+        "TotalCount": count,
+        "_Array": docs
+      });
+  });
+ });
+
+
+link: https://stackoverflow.com/questions/5539955/how-to-paginate-with-mongoose-in-node-js
