@@ -1,0 +1,2 @@
+SAve from console to notebook 
+%notebook -e myhistory.ipynb
